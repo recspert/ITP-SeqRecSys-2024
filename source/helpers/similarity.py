@@ -1,5 +1,17 @@
 import numpy as np
 from scipy.sparse import csr_matrix
+from sklearn.metrics.pairwise import cosine_similarity
+
+def compute_similarity(type, m1, m2):
+    if type == 'jaccard':
+        similarity = jaccard_similarity(m1, m2)
+    elif type == 'weighted_jaccard':
+        similarity = weighted_jaccard_similarity(m1, m2)
+    elif type == 'cosine':
+        similarity = cosine_similarity(m1, m2, dense_output=False)
+    else:
+        raise ValueError(f'Unknown similarity type: {type}')
+    return similarity
 
 def jaccard_similarity(A, B):
     '''

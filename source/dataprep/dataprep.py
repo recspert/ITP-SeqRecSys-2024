@@ -162,6 +162,16 @@ def generate_sequential_matrix(data, data_description, rebase_users=False):
     # construct the matrix
     return csr_matrix((ranks, (user_idx, item_idx)), shape=(n_users, n_items), dtype='f8')
 
+def generate_histories(data, data_description):
+    histories = list(
+        data
+        .sort_values(by=[data_description['users'], data_description['timestamp']])
+        .groupby(data_description['users'])[data_description['items']]
+        .apply(list)
+        .values
+        )
+    return histories
+
 
 def verify_time_split(before, after, target_field='userid', timeid='timestamp'):
     '''

@@ -172,6 +172,24 @@ def generate_histories(data, data_description):
         )
     return histories
 
+def generate_tensor(data, data_description, rebase_users=False):
+    userid = data_description["users"]
+    itemid = data_description["items"]
+    positions = data_description["positions"]
+    
+    df = data.copy()
+    
+    if rebase_users:
+        user_idx, user_index = pd.factorize(
+            df[data_description['users']].values,
+            sort=True
+            )
+        df['factorized'] = user_idx
+        idx = df[['factorized', itemid, positions]].values
+    else:
+        idx = data[[userid, itemid, positions]].values.T
+    val = np.ones(idx.shape[1], dtype='f8')
+    return idx, val
 
 def verify_time_split(before, after, target_field='userid', timeid='timestamp'):
     '''
